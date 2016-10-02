@@ -14,8 +14,7 @@ setup(
     version='0.0.1',
     description='',
     long_description=readme,
-    author='Jianshen Liu',
-    author_email='jliu120@ucsc.edu',
+    author='Greeshma Swaminathan <gswamina@ucsc.edu>, Neha Ojha <nojha@ucsc.edu>, Jianshen Liu <jliu120@ucsc.edu>, Alex Bardales <abardale@ucsc.edu>',
     url='https://github.com/ljishen/yelp-dataset-challenge',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
