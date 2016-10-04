@@ -4,15 +4,17 @@ business_hours{business_id,day_id,open_hour,close_hour} -- primary key {business
 category{category_id,category_name} -- primary key {category_id}
 business_category{business_id,category_id} primary key {business_id , category_id} foreignkey{business_id(business) , category_id(category)}
 attributes{attribute_id, atrribute} -- primary key{attribute_id}
-business_attributes{business_id ,attribute_id} -- primary key{business_id , attribute_id}, foreignkey{business_id(business) , attribute_id(attributes)}
+business_attributes{business_id ,attribute_id,attribute_value} -- primary key{business_id , attribute_id}, foreignkey{business_id(business) , attribute_id(attributes)}
 checkin{checkin_Id,checkin_desc} --  primary key{checkin_Id}
 business_checkins{business_id, checkin_id, count} -- primary key{business_id , checkin_Id} foreignkey{business_id(business) , checkin_Id (checkin)}
 review{review_Id,business_id, user_id, text, date, stars} -- primary key {review_Id} foreignkey{business_id (business), user_id (user)}
-vote_type{vote_type_id,vote_type_desc} -- primary key {vote_type_id}
-review_votes{review_Id,vote_type_id, count} -- primary key {review_Id , vote_type_id} foreignkey{review_Id (review), vote_type_id (vote_type)}
-tips{business_id,text,user_id, date, likes} -- primary key {user_id, business_id} foreignkey{user_id (user),business_id(business) }
+vote{vote_id,vote_desc} -- primary key {vote_id}
+review_votes{review_Id,vote_id, count} -- primary key {review_Id , vote_id} foreignkey{review_Id (review), vote_id (vote)}
+tip{business_id,text,user_id, date, likes} -- primary key {user_id, business_id} foreignkey{user_id (user),business_id(business) }
+neighborhoods{neighborhood_id, neighborhood_name} -- primary key{ neighborhood_id}
+business_neighborhoods{business_id ,neighborhood_id} -- primary key{business_id, neighborhood_id} foreign key{business_id(business), neighborhood_id(neighborhoods)}
 user{user_id,name, review_count, average_stars,yelping_since, fans} -- primary key {user_id}
-user_vote{user_id,vote_type_id, count} -- primary key {user_id, vote_type_id} foreign key {user_id (user), vote_type_id (vote_type)}
+user_vote{user_id,vote_id, count} -- primary key {user_id, vote_id} foreign key {user_id (user), vote_id (vote)}
 user_friend{user_id, friend_id} -- primary key {user_id, friend_id} foreign key {user_id (user), friend_id (user)}
 user_elite{user_id,elite_year} -- primary key {user_id, elite_year} foreign key {user_id (user)}
 compliment{compliment_id,compliment_desc} -- primary key {compliment_id} 
