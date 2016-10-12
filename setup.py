@@ -9,6 +9,12 @@ with open('README.md') as f:
 with open('LICENSE') as f:
     license = f.read()
 
+requires = [
+        'nose',
+        'sphinx',
+        'ujson',
+        ]
+
 setup(
     name='challenge',
     version='0.0.1',
@@ -17,6 +23,7 @@ setup(
     author='Greeshma Swaminathan <gswamina@ucsc.edu>, Neha Ojha <nojha@ucsc.edu>, Jianshen Liu <jliu120@ucsc.edu>, Alex Bardales <abardale@ucsc.edu>',
     url='https://github.com/ljishen/yelp-dataset-challenge',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('docs')),
+    install_requires=requires,
+    tests_require=requires
 )
-
