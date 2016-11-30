@@ -10,7 +10,7 @@ def get_kfolds(df, folds = 10):
     df_test = []
     df_train = []
     newdf = df
-    for i in range(0,9):
+    for i in range(0,folds - 1):
         df_part = newdf.sample(frac= (1/(folds - i)), random_state = 42)
         df_test.append(df_part)
         df_train.append(df[~df.isin(df_part)].dropna())
