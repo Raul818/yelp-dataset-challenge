@@ -177,7 +177,7 @@ def testNB(test_restaurants_df, dim_freq_map, selected_columns, prior_of_stars):
 
 
 def k_fold_crossvalidation():
-    testlist, trainlist = validation.get_kfolds(df_business_restaurants)
+        testlist, trainlist = validation.get_kfolds(df_business_restaurants)
     accuracy_list = []
     dist_list = []
     offcount_list = []
