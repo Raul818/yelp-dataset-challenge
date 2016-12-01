@@ -15,8 +15,9 @@ The repository is organized as below.
 
 ## Usage
 
-- Download `yelp_academic_dataset_business.json` and put this in the root folder
+- Download `yelp_academic_dataset_business.json` from [Yelp Dataset Challenge](https://www.yelp.com/dataset_challenge/) and put this in the root folder
 - At the root of repo, issue this command to set up the `PYTHONPATH`
+
     ```bash
     export PYTHONPATH="`pwd`/challenge:`pwd`/tests"
     ```
