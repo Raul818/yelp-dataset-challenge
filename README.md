@@ -20,6 +20,7 @@ export PYTHONPATH="`pwd`/challenge:`pwd`/tests"
 Following command will run the tests
 
 python -m unittest validation_test
+
 python -m unittest analysis_test
 
 Following command will run the main file and print the classifier accuracy.
