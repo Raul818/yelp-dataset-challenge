@@ -1,8 +1,7 @@
 import unittest
-import challenge
 import pandas as pd
 
-from challenge import validation
+import validation
 
 # Test for methods in challenge/validation.py
 class TestValidationMethods(unittest.TestCase):

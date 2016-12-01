@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-
 import preprocessing
 import validation
 import numpy as np
 import pandas as pd
 
-df_business_restaurants = preprocessing.get_preprocessed_data()
+
 
 def get_business_bystars(training_restaurants_df, stars_column):
     group_by_stars = training_restaurants_df.groupby(stars_column)
@@ -21,10 +20,10 @@ def get_priors(business_of_stars,training_restaurants_df):
     for star in business_of_stars:
         prior_of_stars[star] = len(business_of_stars[star]) * 1.0 / len(training_restaurants_df)
     #print (prior_of_stars)
-    x = list(prior_of_stars.values())
-    normalizing_fact = 1 / np.linalg.norm(x)
-    for k in prior_of_stars:
-        prior_of_stars[k] = prior_of_stars[k] * normalizing_fact
+    #x = list(prior_of_stars.values())
+    #normalizing_fact = 1 / np.linalg.norm(x)
+    #for k in prior_of_stars:
+        #prior_of_stars[k] = prior_of_stars[k] * normalizing_fact
     return prior_of_stars
 
 def get_uniqueattributevalues(atrribute_names, training_restaurants_df, unique_dimension_values):
@@ -44,7 +43,7 @@ def get_working_type(business_of_stars):
 
 def get_unique_columnvalues(training_restaurants_df, column_names,unique_dimension_values):
     for column_name in column_names:
-        unique_dimension_values[column_name] = training_restaurants_df['city'].unique()
+        unique_dimension_values[column_name] = training_restaurants_df[column_name].unique()
         
 DEFAULT_TYPE = 'default'
 def extract_value_from_attrs(attrs, k):
@@ -176,8 +175,8 @@ def testNB(test_restaurants_df, dim_freq_map, selected_columns, prior_of_stars):
     return accuracy,avg_dist,off_by_morethan_halfstar
 
 
-def k_fold_crossvalidation():
-        testlist, trainlist = validation.get_kfolds(df_business_restaurants)
+def k_fold_crossvalidation(df_business_restaurants):
+    testlist, trainlist = validation.get_kfolds(df_business_restaurants)
     accuracy_list = []
     dist_list = []
     offcount_list = []
@@ -193,6 +192,7 @@ def k_fold_crossvalidation():
     return np.mean(np.asarray(accuracy_list)), np.mean(np.asarray(dist_list)), np.mean(np.asarray(offcount_list))
 
 def main():
+    df_business_restaurants = preprocessing.get_preprocessed_data()
     training, test = validation.test_trainsplit(df_business_restaurants)
     dim_freq_map,prior_of_stars = trainNB(training)
     selected_columns = ['review_count','city','review_sentiment_rating','review_star_rating','tip_rating','checkin_rating']
@@ -201,7 +201,7 @@ def main():
     selected_columns = ['review_count','city','review_sentiment_rating','tip_rating','checkin_rating']
     accuracy,dist,offcount = testNB (test,dim_freq_map, selected_columns,prior_of_stars)
     print ("With out review_star_rating, rounded stars -- accuracy,dist,offcount :",accuracy,dist,offcount)
-    print ("k fold cross validation results ",k_fold_crossvalidation())
+    print ("k fold cross validation results ",k_fold_crossvalidation(df_business_restaurants))
 
 if __name__ == "__main__":
     main()

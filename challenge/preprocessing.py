@@ -123,7 +123,7 @@ def hours_to_type(s):
 def join_types(ts):
     # reorder
     ordered_types = []
-    for t in WORKING_TYPES.values():
+    for t in sorted(WORKING_TYPES.values()):
         if t in ts:
             ordered_types.append(t)
     return '_'.join(ordered_types)
@@ -133,18 +133,18 @@ def get_preprocessed_data():
     DATASET_DIR = '../'
     
     ## read reviews and calculate sentiment scores
-    df_review = pd.read_json('../out/yelp_academic_dataset_review_sentiment.json', lines=True)
+    df_review = pd.read_json('out/yelp_academic_dataset_review_sentiment.json', lines=True)
     df_review = df_review[df_review['sentiment_value'] != 3]    # remove reviews with invalid sentiment_value
     df_review = df_review.assign(sentiment_score = 
                                  lambda df: df['sentiment_value'] * df['votes'].apply(lambda s: s['useful'] + 1))
     ## read tips and calculate sentiment scores
-    df_tip = pd.read_json('../out/yelp_academic_dataset_tip_sentiment.json', lines=True)
+    df_tip = pd.read_json('out/yelp_academic_dataset_tip_sentiment.json', lines=True)
     df_tip = df_tip[df_tip['sentiment_value'] != 3]    # remove reviews with invalid sentiment_value
     df_tip = df_tip.assign(sentiment_score =
             lambda df: df['sentiment_value'] * (df['likes'] + 1))
     
     ## read business dataset
-    df_business = pd.read_json(DATASET_DIR + '/yelp_academic_dataset_business.json', lines=True)
+    df_business = pd.read_json('yelp_academic_dataset_business.json', lines=True)
     business_filters = (df_business['review_count'].apply(lambda rc: rc >= 20)
                     & df_business['categories'].apply(lambda cs: 'Restaurants' in cs)
                     & df_business['open'])
@@ -162,7 +162,7 @@ def get_preprocessed_data():
 
 
     ## read checkin count of business and calculate "checkin_rating"
-    df_checkin = pd.read_json('../out/business_with_checkin_count.json')
+    df_checkin = pd.read_json('out/business_with_checkin_count.json')
     
     df_business_restaurants['checkin_rating'] = df_business_restaurants['business_id'].apply(lambda bid: get_checkin_count(df_checkin,bid))
 
