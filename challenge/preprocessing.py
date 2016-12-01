@@ -27,26 +27,26 @@ lunch = time(12)
 after_lunch = time(15)
 dinner = time(18)
 night = time(0)
-    
+
 def get_avg_score_of_business(series, bid, col):
     if bid in series.groups:
         group = series.get_group(bid)
         return group[col].mean()
     else:
         return np.nan
-    
+
 def add_evluation_score_to_business(new_col_for_score_df, df_business_restaurants):
     series = new_col_for_score_df[0].groupby('business_id')
     df_business_restaurants[new_col_for_score_df[2]] = df_business_restaurants['business_id'].apply(lambda bid: get_avg_score_of_business(series, bid, new_col_for_score_df[1]))
     return df_business_restaurants
-    
+
 def get_checkin_count(df_checkin, bid):
     row = df_checkin[df_checkin['business_id'] == bid]
     if not row.empty:
         return row.iloc[0]['checkin_count']
     else:
         return np.nan
-    
+
 def score_to_rating(col, df_business_restaurants):
      ## calculate the rating from scores
     NUM_BINS_OF_RATING = 72
@@ -129,20 +129,20 @@ def join_types(ts):
     return '_'.join(ordered_types)
 
 def get_preprocessed_data():
-    
-    DATASET_DIR = '../'
-    
+
+    DATASET_DIR = '../../dataset/academic'
+
     ## read reviews and calculate sentiment scores
     df_review = pd.read_json('out/yelp_academic_dataset_review_sentiment.json', lines=True)
     df_review = df_review[df_review['sentiment_value'] != 3]    # remove reviews with invalid sentiment_value
-    df_review = df_review.assign(sentiment_score = 
+    df_review = df_review.assign(sentiment_score =
                                  lambda df: df['sentiment_value'] * df['votes'].apply(lambda s: s['useful'] + 1))
     ## read tips and calculate sentiment scores
     df_tip = pd.read_json('out/yelp_academic_dataset_tip_sentiment.json', lines=True)
     df_tip = df_tip[df_tip['sentiment_value'] != 3]    # remove reviews with invalid sentiment_value
     df_tip = df_tip.assign(sentiment_score =
             lambda df: df['sentiment_value'] * (df['likes'] + 1))
-    
+
     ## read business dataset
     df_business = pd.read_json('yelp_academic_dataset_business.json', lines=True)
     business_filters = (df_business['review_count'].apply(lambda rc: rc >= 20)
@@ -152,18 +152,18 @@ def get_preprocessed_data():
                            .reset_index(drop=True)[['business_id', 'stars', 'review_count', 'hours', 'city', 'attributes']])
     # round the stars
     df_business_restaurants['stars'] = df_business_restaurants['stars'].apply(np.round)
-    
+
     new_col_for_score_dfs = [(df_review, 'sentiment_score', 'review_sentiment_rating'),
                          (df_review, 'stars', 'review_star_rating'),
                          (df_tip, 'sentiment_score', 'tip_rating')]
-    
+
     for item in new_col_for_score_dfs:
         df_business_restaurants = add_evluation_score_to_business(item, df_business_restaurants)
 
 
     ## read checkin count of business and calculate "checkin_rating"
     df_checkin = pd.read_json('out/business_with_checkin_count.json')
-    
+
     df_business_restaurants['checkin_rating'] = df_business_restaurants['business_id'].apply(lambda bid: get_checkin_count(df_checkin,bid))
 
     df_business_restaurants['checkin_rating'] = df_business_restaurants['review_count'] / df_business_restaurants['checkin_rating']
@@ -182,7 +182,7 @@ def get_preprocessed_data():
     df_business_restaurants = df_business_restaurants[business_nan_filters].reset_index(drop=True)
 
 
-   
+
     score_cols = ['review_sentiment_rating', 'review_star_rating', 'tip_rating', 'checkin_rating']
 
     # convert score to rating
@@ -193,7 +193,7 @@ def get_preprocessed_data():
     ## convert "hours" in business to "working_type"
     df_business_restaurants = df_business_restaurants.assign(working_type=lambda x: x['hours'])
 
-    
+
     df_business_restaurants['working_type'] = df_business_restaurants['working_type'].apply(hours_to_type)
     working_type_set = df_business_restaurants['working_type'].unique()
 
